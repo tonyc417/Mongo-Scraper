@@ -47,4 +47,8 @@ app.get("/scrape", (req, res) => {
     })
 });
 
+app.get("/", (req, res) => {
+    res.send()
+})
+
 app.listen(PORT, console.log(`Server is now listening on: ${PORT}`));
