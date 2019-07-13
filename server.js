@@ -1,6 +1,7 @@
 const express = require('express');
 const cheerio = require('cheerio');
 const axios = require('axios');
+const mongoose = require('mongoose');
 
 
 const PORT = process.env.PORT || 3000;
@@ -10,6 +11,11 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+mongoose.connect(MONGODB_URI);
+
 
 // axios.get('https://www.marketwatch.com/latest-news?mod=top_nav').then( (response) => {
 //     var $ = cheerio.load(response.data);
@@ -48,7 +54,8 @@ app.get("/scrape", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send()
+    console.log("loaded the home")
+    res.send("index")
 })
 
 app.listen(PORT, console.log(`Server is now listening on: ${PORT}`));
