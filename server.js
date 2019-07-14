@@ -48,7 +48,6 @@ app.get("/scrape", (req, res) => {
             var result = {};
             result.title = $(this).children("a").text();
             result.link = $(this).children("a").attr("href");
-            console.log(result);
 
             db.News.create(result).then(function(dbArticle) {
                 console.log(dbArticle);
@@ -57,8 +56,15 @@ app.get("/scrape", (req, res) => {
             });
         })
         res.send("Completed the extract")
-        res.redirect("/");
     })
+});
+
+app.get("/all", (req, res) => {
+    db.News.find({}).then(function(dbArticle) {
+        res.json(dbArticle)
+    }).catch(function(err) {
+        res.json(err);
+    });
 });
 
 app.get("/", (req, res) => {
