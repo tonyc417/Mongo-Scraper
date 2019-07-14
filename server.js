@@ -41,13 +41,13 @@ mongoose.connect(MONGODB_URI);
 // });
 
 app.get("/scrape", (req, res) => {
-     axios.get('http://www.echojs.com/').then( (response) => {
+     axios.get('https://www.marketwatch.com/latest-news?mod=top_nav').then( (response) => {
         var $ = cheerio.load(response.data);
 
-        $("article h2").each(function(i, element) {
+        $("h3.article__headline").each(function(i, element) {
             var result = {};
-            result.title = $(this).children("a").text();
-            result.link = $(this).children("a").attr("href");
+            result.title = $(this).text();
+            result.link = $(this).children().attr("href");
 
             db.News.create(result).then(function(dbArticle) {
                 console.log(dbArticle);
