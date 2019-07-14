@@ -3,6 +3,7 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 const mongoose = require('mongoose');
 
+var db = require('./models');
 
 const PORT = process.env.PORT || 3000;
 
@@ -40,16 +41,23 @@ mongoose.connect(MONGODB_URI);
 // });
 
 app.get("/scrape", (req, res) => {
-    axios.get('https://www.marketwatch.com/latest-news?mod=top_nav').then( (response) => {
+     axios.get('http://www.echojs.com/').then( (response) => {
         var $ = cheerio.load(response.data);
 
-        $("h3.article__headline").each(function(i, element) {
+        $("article h2").each(function(i, element) {
             var result = {};
-            result.title = $(this).text();
-            result.link = $(this).children().attr("href");
+            result.title = $(this).children("a").text();
+            result.link = $(this).children("a").attr("href");
             console.log(result);
+
+            db.News.create(result).then(function(dbArticle) {
+                console.log(dbArticle);
+            }).catch(function(err) {
+                console.log(err)
+            });
         })
         res.send("Completed the extract")
+        res.redirect("/");
     })
 });
 
